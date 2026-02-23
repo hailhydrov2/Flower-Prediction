@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flower Species Detector</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Flower Species Detector</p>
+        <h1>Find the species hiding in your blooms.</h1>
+        <p class="subtitle">Upload a flower image or take a photo to detect its species in seconds.</p>
+      </div>
+      <div class="hero-panel">
+        <div class="hero-stat">
+          <span class="stat-value">102</span>
+          <span class="stat-label">Flower classes</span>
+        </div>
+        <div class="hero-stat">
+          <span class="stat-value">EfficientNet</span>
+          <span class="stat-label">Fine-tuned model</span>
+        </div>
+      </div>
+    </section>
+
+    <form action="/predict" method="post" enctype="multipart/form-data" class="card">
+      <div class="input-group">
+        <label for="image">Upload flower image</label>
+        <input id="image" name="image" type="file" accept="image/*">
+      </div>
+
+      <div class="camera-section">
+        <p class="camera-title">Or take a photo from your webcam</p>
+        <video id="camera" autoplay playsinline></video>
+        <canvas id="snapshot" class="hidden"></canvas>
+        <input type="hidden" id="captured_image" name="captured_image">
+
+        <div class="button-row">
+          <button type="button" id="startCameraBtn" class="secondary">Start Camera</button>
+          <button type="button" id="captureBtn" class="secondary">Capture</button>
+        </div>
+      </div>
+
+      <button type="submit" class="primary">Predict Flower</button>
+    </form>
+
+    <p class="model-path">Model: {{ model_path }}</p>
+
+    {% if error %}
+      <section class="result error">{{ error }}</section>
+    {% endif %}
+
+    {% if prediction %}
+      <section class="result">
+        <h2>Prediction Result</h2>
+        <p class="prediction">{{ prediction }}</p>
+
+        {% if top_predictions %}
+          <h3>Top 5 Predictions</h3>
+          <table class="top5-table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Flower Species</th>
+                <th>Confidence</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in top_predictions %}
+                <tr {% if item.rank == 1 %}class="best-prediction"{% endif %}>
+                  <td><strong>{{ item.rank }}</strong></td>
+                  <td>{{ item.flower }}</td>
+                  <td>{{ item.confidence }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
+
+        {% if description %}
+          <details class="description-section">
+            <summary>About This Flower</summary>
+            <p class="description-text">{{ description }}</p>
+          </details>
+        {% endif %}
+      </section>
+    {% endif %}
+  </main>
+
+  <script>
+    const startCameraBtn = document.getElementById('startCameraBtn');
+    const captureBtn = document.getElementById('captureBtn');
+    const camera = document.getElementById('camera');
+    const snapshot = document.getElementById('snapshot');
+    const capturedImageInput = document.getElementById('captured_image');
+
+    let stream = null;
+
+    startCameraBtn.addEventListener('click', async () => {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        camera.srcObject = stream;
+      } catch (error) {
+        alert('Unable to access camera. Please allow permission or use file upload.');
+      }
+    });
+
+    captureBtn.addEventListener('click', () => {
+      if (!stream) {
+        alert('Start camera first.');
+        return;
+      }
+
+      const width = camera.videoWidth || 640;
+      const height = camera.videoHeight || 480;
+
+      snapshot.width = width;
+      snapshot.height = height;
+
+      const context = snapshot.getContext('2d');
+      context.drawImage(camera, 0, 0, width, height);
+
+      const dataUrl = snapshot.toDataURL('image/jpeg');
+      capturedImageInput.value = dataUrl;
+      alert('Photo captured. Now click Predict Flower.');
+    });
+  </script>
+</body>
+</html>
