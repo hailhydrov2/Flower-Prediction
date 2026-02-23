@@ -1,41 +1,52 @@
-Flower Classification Web Application
-A Flask-based web application for classifying flower images using a fine-tuned EfficientNet-B0 model trained on the Oxford Flowers-102 dataset.
+<h1>Flower Classification Web Application | Flask, PyTorch, EfficientNet</h1>
 
-Overview
-This project implements a deep learning-powered flower classification system that can identify 102 different flower species. The application features a user-friendly web interface where users can upload flower images and receive predictions with detailed information about the identified species.
+- Built a full-stack Flask web application to classify 102 flower species using a fine-tuned EfficientNet-B0 deep learning model
 
-Features
-Accurate Classification: Uses EfficientNet-B0 architecture fine-tuned on the Oxford Flowers-102 dataset
-Top-K Predictions: Displays the top 5 most likely flower species with confidence scores
-Rich Information: Provides detailed descriptions of identified flowers, fetched from Wikipedia when available
-User-Friendly Interface: Clean, responsive web interface built with HTML, CSS, and Flask
-Image Preview: Shows the uploaded image alongside prediction results
-Flexible Input: Supports both file upload and base64-encoded image data
+- Implemented Top-5 prediction ranking with confidence scores and real-time image inference
 
+- Designed a responsive UI supporting image upload and preview with integrated prediction results
 
-The model:
+- Trained and evaluated the model on the Oxford Flowers-102 dataset, applying transfer learning and regularization techniques
 
-Uses EfficientNet-B0 as the backbone (pre-trained on ImageNet)
-Adds custom classification layers with batch normalization and dropout
-Processes 224×224 pixel images
-Outputs predictions for 102 flower categories
+- Integrated external knowledge retrieval to display flower descriptions from Wikipedia
 
-Installation
-Prerequisites
-Python 3.8 or higher
-CUDA-capable GPU (optional, for faster inference)
+- Managed large model artifacts using Git LFS and followed ML deployment best practices
 
-Setup
-Clone the repository:
-Create a virtual environment:
-Install dependencies:
-Download the dataset (optional, for training):
+##  Features
 
-The Oxford Flowers-102 dataset should be placed in the dataset directory
-Organized into train/, valid/, and test/ subdirectories
-Ensure model weights exist:
+- **Accurate Classification** – Fine-tuned EfficientNet-B0 trained on Oxford Flowers-102  
+- **Top-5 Predictions** – Displays confidence-ranked flower predictions  
+- **Rich Information** – Fetches flower descriptions from Wikipedia (when available)  
+- **User-Friendly Interface** – Clean, responsive UI built with Flask, HTML, and CSS  
+- **Image Preview** – Uploaded image shown alongside prediction results  
+- **Flexible Input** – Supports file upload and base64-encoded image data  
 
-The trained model should be at efficientnetb0_flowers_final.pth
-If not available, train the model using flower_efficientnet.ipynb
+---
+
+##  Model Details
+
+- **Architecture:** EfficientNet-B0 (pre-trained on ImageNet)
+- **Custom Layers:** Batch Normalization and Dropout
+- **Input Size:** 224 × 224 pixels
+- **Output Classes:** 102 flower categories
+
+---
 
 
+
+
+##  Setup & Installation
+
+### Prerequisites
+- **Python 3.8+**
+- **pip** (Python package manager)
+- **CUDA-capable GPU** *(optional, for faster inference)*
+
+---
+
+### Installation 
+
+- **Clone the repository**
+  ```bash
+  git clone https://github.com/hailhydrov2/Flower-Prediction.git
+  cd Flower-Prediction
